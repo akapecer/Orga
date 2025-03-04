@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
-import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,22 +21,13 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "menu/static")]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-SECRET_KEY = os.getenv("SECRET_KEY", "1c4b5b3fada4b7860fb268838e0c4167") 
-DEBUG = os.getenv("DEBUG", "False") == "True"
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-qw=sxp!83ajud&+b-hqro1vg__8*t$_kwj)xgj700#mq7e^ga-'
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "orga.onrender.com").split(",")  
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "https://orga.onrender.com").split(",")  
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL', 'postgresql://orga_db_4h6c_user:ezGsMSnlWbpH0aq990vz6ULhUWt0FDVs@dpg-cv2ucitsvqrc7398m41g-a/orga_db_4h6c')
-    )
-}
-
-
-STATIC_ROOT = os.getenv("DJANGO_STATIC_ROOT", "staticfiles")
-MEDIA_ROOT = os.getenv("DJANGO_MEDIA_ROOT", "media")
-
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -104,6 +94,17 @@ WSGI_APPLICATION = 'orga.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'orga_db',
+        'USER': 'postgres',
+        'PASSWORD': 'postmario',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 
 
