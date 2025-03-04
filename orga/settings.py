@@ -9,16 +9,16 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+"""
+Django settings for orga project.
+"""
 import os
 from pathlib import Path
 import dj_database_url
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent  # Corretto per i path
 
-STATIC_URL = "static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "menu/static")]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -28,13 +28,14 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
+# Gestione degli Host e delle origini per CSRF (importante per la sicurezza)
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
 
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
+    'jazzmin',  
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,23 +45,56 @@ INSTALLED_APPS = [
     'menu',
 ]
 
+# Configurazione di Jazzmin
 JAZZMIN_SETTINGS = {
     "site_title": "Orga Admin",
     "site_header": "Orga Dashboard",
     "site_brand": "Orga",
-    "site_logo": "images/logo_login.png",  # Percorso del logo
-    "login_logo": "images/logo.png",
     "welcome_sign": "Benvenuto in Orga!",
     "show_sidebar": True,
     "navigation_expanded": True,
     "icons": {
         "menu.Piatto": "fas fa-utensils",
         "menu.Menu": "fas fa-book-open",
-        "menu.Categoria": "fas fa-tags", 
+        "menu.Categoria": "fas fa-tags",
         "menu.Allergene": "fas fa-exclamation-triangle",
     },
+    "top_menu": [
+        {"name": "Orga", "url": "/", "permissions": ["auth.view_user"]}
+    ],
 }
 
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-primary",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": False,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_flat_style": False,
+    "footer": "footer-dark",
+    "body_dark_mode": False,
+    "breadcrumb_small_text": False,
+    "breadcrumb_classes": "breadcrumb-item",
+    "link_colour": "white-60",
+    "actions_sticky_top": True,
+    "related_modal_active": False,
+    "top_nav_padding": False,
+    "changeform_submit_sticky_position": True
+}
+# Se vuoi aggiungere le immagini
+JAZZMIN_SETTINGS.update({
+    "site_logo": "images/logo.png",
+    "login_logo": "images/siderbar_logo.png",
+})
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -92,7 +126,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'orga.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -118,7 +151,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 LANGUAGES = [
@@ -137,16 +169,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = 'static/'
+# Directory dove Django raccoglie tutti i file statici con collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Directory aggiuntive dove Django cerca file statici (oltre a quelli nelle app)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "menu/static")]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
